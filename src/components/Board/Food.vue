@@ -16,7 +16,9 @@
                 <mt-button class="food-adder-delete-btn" @click.native="DeleteFoodType(index)">删除</mt-button>
             </mt-field>
         </div>
-        <mt-button class="food-adder-btn" @click.native="AddFoodType">添加食物种类</mt-button>
+        <div class="food-adder-btn-container">
+            <mt-button class="food-adder-btn" @click.native="AddFoodType">添加食物种类</mt-button>
+        </div>
     </div>
 </template>
 
@@ -92,6 +94,9 @@
     font-size: 15px;
     width: 80%;
     margin: 10px auto;
+  }
+  .food-adder-btn-container {
+      text-align: center;
   }
   .food-adder-delete-btn {
     color:cornflowerblue !important;
