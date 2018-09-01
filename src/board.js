@@ -23,9 +23,9 @@ Vue.http.options.emulateJSON = true;
 
 FastClick.attach(document.body);
 
-
 // configure router
 const router = new VueRouter({
+  mode: 'history',
   routes, // short for routes: routes
   linkActiveClass: 'nav-item active'
 })

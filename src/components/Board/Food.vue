@@ -1,0 +1,103 @@
+<template>
+    <div>
+        <label class="mint-radiolist-title">食物种类</label>
+        <div class="item-container">
+            <mt-field 
+                type="text"
+                placeholder="请输入食物种类"
+                v-for="(type, index) in foodtypes"
+                :key="type.id"
+                v-model="type.name"
+                disableClear>
+                <span class="adder-bowl-num">{{type.value}}碗</span>
+                <mt-button class="adder-btn" size="small" @click.native="Minus(type)">-</mt-button>
+                <span class="adder-value">{{type.value}}</span>
+                <mt-button class="adder-btn" size="small" @click.native="Add(type)">+</mt-button>
+                <mt-button class="food-adder-delete-btn" @click.native="DeleteFoodType(index)">删除</mt-button>
+            </mt-field>
+        </div>
+        <mt-button class="food-adder-btn" @click.native="AddFoodType">添加食物种类</mt-button>
+    </div>
+</template>
+
+<script>
+
+  export default {
+    name: 'food',
+    props: {
+        value: {
+            type: Object,
+            default: () => {
+              return {
+                name: '',
+                value: 0,
+              }
+            },
+        },
+    },
+    data () {
+        return {
+            foodtypes: [{
+              name: '',
+              value: 0,
+            }],
+        }
+    },
+    methods: {
+        Add (type) {
+            type.value++;
+            // this.$emit('input', this.adderValue)
+        },
+        Minus (type) {
+            type.value--;
+            if (type.value < 0) {
+                type.value = 0;
+            }
+            // this.$emit('input', type.value)
+        },
+        AddFoodType () {
+            this.foodtypes.push({
+              name: '',
+              value: 0,
+            })
+        },
+        DeleteFoodType (index) {
+            this.foodtypes.splice(index, 1);
+        }
+    },
+    mounted () {
+    }
+  }
+
+</script>
+<style>
+  .adder-value {
+      display: inline-block;
+      height: 30px;
+      width: 30px;
+      line-height: 30px;
+      text-align: center;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+  }
+  .adder-btn {
+      touch-action: none;
+  }
+  .adder-bowl-num {
+    padding-right: 20px;
+  }
+  .food-adder-btn {
+    display: block;
+    font-size: 15px;
+    width: 80%;
+    margin: 10px auto;
+  }
+  .food-adder-delete-btn {
+    color:cornflowerblue;
+    font-size: 14px;
+    background-color: #fff;
+    padding: 2px;
+    box-shadow: 0 0 0px!important;
+  }
+</style>
+

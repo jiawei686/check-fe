@@ -38,6 +38,10 @@
       text="益力佳">
     </adder>
 
+    <food
+      >
+    </food>
+
     <mt-radio
       title="今日心情"
       v-model="mood"
@@ -74,6 +78,7 @@
 <script>
   import { Toast } from 'mint-ui';
   import Adder from './Adder';
+  import Food from './Food';
 
   Date.prototype.format = function (format) {
       var o = {
@@ -103,6 +108,7 @@
   export default {
     components: {
       Adder,
+      Food,
     },
     data () {
       return {
