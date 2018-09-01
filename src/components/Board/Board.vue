@@ -1,7 +1,7 @@
 <template>
   <div class="">
     <div class="item-container">
-      <mt-field label="姓名" placeholder="请输入姓名" type="text" v-model="name" disableClear></mt-field>
+      <mt-field label="患者姓名" placeholder="请输入患者姓名" type="text" v-model="name" disableClear></mt-field>
       <mt-field label="打卡日期" placeholder="请选择日期" type="date" v-model="date" disableClear></mt-field>
     </div>
     <mt-checklist
