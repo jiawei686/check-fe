@@ -1,6 +1,7 @@
 <template>
   <div class="">
     <div class="item-container">
+      <mt-field label="姓名" placeholder="请输入姓名" type="text" v-model="name" disableClear></mt-field>
       <mt-field label="打卡日期" placeholder="请选择日期" type="date" v-model="date" disableClear></mt-field>
     </div>
     <mt-checklist
@@ -23,52 +24,84 @@
 
     <!-- stage3选项 -->
     <adder
+      v-model="nql"
+      unit="瓶"
+      text="能全力"
+      v-if="isnqlShow">
+    </adder>
+    <adder
+      v-model="asf"
+      unit="勺"
+      text="安素粉"
+      v-if="isasfShow">
+    </adder>
+    <adder
       v-model="bpl"
       unit="瓶"
-      text="百普力">
+      text="百普力"
+      v-if="isbplShow">
     </adder>
     <adder
       v-model="rn"
       unit="瓶"
-      text="瑞能">
+      text="瑞能"
+      v-if="isrnShow">
     </adder>
     <adder
-      v-model="BDJTime"
+      v-model="ylj"
       unit="瓶"
-      text="益力佳">
+      text="益力佳"
+      v-if="isyljShow">
     </adder>
-
-    <food
-      >
-    </food>
+    <div class="item-container">
+      <mt-field label="液体总量" placeholder="请输入液体总量" type="text" v-model="liquid" disableClear>
+          毫升
+      </mt-field>
+    </div>
+    <food v-model="foodtypes" v-if="isfoodtypesShow"></food>
+    
 
     <mt-radio
       title="今日心情"
       v-model="mood"
       :max="1"
-      :options="['开心 😄', '一般 😐', '难过 😫']">
+      :options="[{
+        label:'开心 😄',
+        value:'good',
+       }, {
+         label: '一般 😐',
+         value: 'normal',
+       }, {
+         label: '难过 😫',
+         value: 'bad',
+       }]">
     </mt-radio>
 
      <!-- stage5选项 -->
-    <mt-checklist
-      align="right"
-      title="如有练习请在右侧打勾，否则请填写备注原因"
-      v-model="isBDJ"
-      :options="BDJOptions">
-    </mt-checklist>
-    <adder
-      v-if="isBDJTimeShow"
-      v-model="BDJTime"
-      text="练习次数">
-    </adder>
-
+     <div v-if="isBDJShow">
+        <mt-checklist
+          align="right"
+          title="如有练习请在右侧打勾，否则请填写备注原因"
+          v-model="isBDJ"
+          :options="BDJOptions">
+        </mt-checklist>
+        <adder
+          v-if="isBDJTimeShow"
+          v-model="BDJTime"
+          text="练习次数">
+        </adder>
+     </div>
+    <div class="item-container">
+      <mt-field label="备注信息" placeholder="请输入备注信息" type="textarea" rows="2" v-model="remark"></mt-field>
+    </div>
 
     
     <!-- general -->
     <br>
     <mt-button 
       size="large"
-      type="primary">
+      type="primary"
+      @click.native="postCheck">
       提交
     </mt-button>
 
@@ -114,6 +147,8 @@
       return {
         openid: "",
         stage: 0,
+        plan: 0,
+        name: "",
 
         date: new Date().format('yyyy-MM-dd'),
         
@@ -131,6 +166,10 @@
         ylj: 0,
         nql: 0,
         rn: 0,
+        asf: 0,
+
+
+        liquid: 0,
 
         // stage5选项
         isBDJ: [false],
@@ -143,6 +182,13 @@
         isnqlShow: false,
         isrnShow: false,
         isBDJShow: false,
+        isasfShow: false,
+        isfoodtypesShow: false,
+        
+
+        remark: "",
+
+        foodtypes: [],
       }
     },
     watch: {
@@ -169,8 +215,99 @@
       getStage () {
           this.$http.get(`https://api.cancercare.net.cn/api/questionnaire?openid=${this.openid}`)
           .then(res => {
-            console.log(res)
             this.stage = res.body.content.stage;
+            this.plan = res.body.content.plan;
+            var s = this.stage;
+            var p = this.plan;
+
+            if (s == 3) {
+              if (p == 1) {
+                this.isrnShow = true;
+                this.isnqlShow = true;
+                this.isasfShow = true;
+              }
+              else if (p == 2) {
+                this.isrnShow = true;
+                this.isnqlShow = true;
+                this.isyljShow = true;
+              }
+              else if (p == 3) {
+                this.isrnShow = true;
+                this.isnqlShow = true;
+              }
+              else if (p == 4) {
+                this.isrnShow = true;
+                this.isnqlShow = true;
+                this.isasfShow = true;
+              }
+              else if (p == 5) {
+                this.isrnShow = true;
+                this.isbplShow = true;
+                this.isyljShow = true;
+              }
+              else if (p == 6) {
+                this.isrnShow = true;
+                this.isbplShow = true;
+              }
+            }
+            else if (s == 4) {
+              this.isfoodtypesShow = true;
+              if (p == 1) {
+                this.isnqlShow = true;
+                this.isasfShow = true;
+              }
+              else if (p == 2) {
+                this.isnqlShow = true;
+                this.isasfShow = true;
+              }
+              else if (p == 3) {
+                this.isbplShow = true;
+                this.isyljShow = true;
+              }
+              else if (p == 4) {
+                this.isbplShow = true;
+                this.isyljShow = true;
+              }
+            }
+            else if (s == 5) {
+                this.isbplShow = true;
+            }
+          }, res => {
+            Toast('网络连接失败，请稍后重试!');
+          }) 
+      },
+      postCheck () {
+        var food_type = [];
+        var food_zw = [];
+        this.foodtypes.forEach((type) => {
+          food_type.push(type.name);
+          food_zw.push(type.value);
+        })
+        this.$http.post("https://api.cancercare.net.cn/api/questionnaire", {
+          openid: this.openid,
+          stage: this.stage,
+          name: this.name,
+          stage: this.stage,
+          nql: this.nql,
+          bpl: this.bpl,
+          rn: this.rn,
+          asf: this.asf,
+          ylj: this.ylj,
+          liquid: this.liquid,
+          iswalk: this.isWalked,
+          walk_cnt: this.walkTime,
+          walk_dura: this.walkTotal,
+          remark: this.remark,
+          mood: this.mood,
+          food_type: food_type,
+          food_zw: food_zw,
+          isbdj: this.isBDJ,
+          bdj_cnt: this.BDJTime,
+          date: this.date,
+          
+        })
+          .then(res => {
+            Toast(res.body.message);
           }, res => {
             Toast('网络连接失败，请稍后重试!');
           }) 
@@ -186,7 +323,7 @@
 </script>
 <style>
   .item-container {
-    padding: 10px 0 0 20px;
+    padding: 10px 0 0 16px;
   }
 </style>
 

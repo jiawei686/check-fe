@@ -1,6 +1,6 @@
 <template>
     <div>
-        <label class="mint-radiolist-title">食物种类</label>
+        <label class="mint-radiolist-title food-title">食物种类</label>
         <div class="item-container">
             <mt-field 
                 type="text"
@@ -26,13 +26,11 @@
     name: 'food',
     props: {
         value: {
-            type: Object,
-            default: () => {
-              return {
-                name: '',
-                value: 0,
-              }
-            },
+            type: Array,
+            default: [{
+              name: '',
+              value: 0,
+            }],
         },
     },
     data () {
@@ -46,14 +44,14 @@
     methods: {
         Add (type) {
             type.value++;
-            // this.$emit('input', this.adderValue)
+            this.$emit('input', this.foodtypes)
         },
         Minus (type) {
             type.value--;
             if (type.value < 0) {
                 type.value = 0;
             }
-            // this.$emit('input', type.value)
+            this.$emit('input', this.foodtypes)
         },
         AddFoodType () {
             this.foodtypes.push({
@@ -86,6 +84,9 @@
   .adder-bowl-num {
     padding-right: 20px;
   }
+  .food-title {
+    margin: 10px 0 -5px 10px;
+  }
   .food-adder-btn {
     display: block;
     font-size: 15px;
@@ -93,10 +94,10 @@
     margin: 10px auto;
   }
   .food-adder-delete-btn {
-    color:cornflowerblue;
-    font-size: 14px;
-    background-color: #fff;
-    padding: 2px;
+    color:cornflowerblue !important;
+    font-size: 14px !important;
+    background-color: #fff !important;
+    padding: 2px !important;
     box-shadow: 0 0 0px!important;
   }
 </style>
