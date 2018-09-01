@@ -90,7 +90,7 @@
     margin: 10px 0 -5px 10px;
   }
   .food-adder-btn {
-    display: block;
+    display: block!important;
     font-size: 15px;
     width: 80%;
     margin: 10px auto;
