@@ -270,7 +270,7 @@
               }
             }
             else if (s == 5) {
-                this.isbplShow = true;
+                this.isBDJShow = true;
             }
           }, res => {
             Toast('网络连接失败，请稍后重试!');
