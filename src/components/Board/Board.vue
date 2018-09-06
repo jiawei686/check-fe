@@ -155,7 +155,10 @@
         mood: '',
 
         isWalked: [false],
-        walkOption: ['是否步行'],
+        walkOption: [{
+          label: '是否步行',
+          value: true,
+        }],
         isWalkTimeShow: false,
         walkTotal: 0,
         walkTotalState: '',
@@ -173,7 +176,10 @@
 
         // stage5选项
         isBDJ: [false],
-        BDJOptions: ['是否练习八段锦'],
+        BDJOptions: [{
+          label: '是否练习八段锦',
+          value: true,
+        }],
         BDJTime: 0,
         isBDJTimeShow: false,
 
@@ -283,6 +289,7 @@
           food_type.push(type.name);
           food_zw.push(type.value);
         })
+
         this.$http.post("https://api.cancercare.net.cn/api/questionnaire", {
           openid: this.openid,
           stage: this.stage,
@@ -294,14 +301,14 @@
           asf: this.asf,
           ylj: this.ylj,
           liquid: this.liquid,
-          iswalk: this.isWalked,
+          iswalk: this.isWalked[1] ? this.isWalked[1] : false,
           walk_cnt: this.walkTime,
           walk_dura: this.walkTotal,
           remark: this.remark,
           mood: this.mood,
           food_type: food_type,
           food_zw: food_zw,
-          isbdj: this.isBDJ,
+          isbdj: this.isBDJ[1] ? this.isBDJ[1] : false,
           bdj_cnt: this.BDJTime,
           date: this.date,
           
